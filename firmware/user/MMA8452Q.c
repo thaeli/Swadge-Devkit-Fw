@@ -6,7 +6,7 @@
 
 #include <osapi.h>
 
-#include "brzo_i2c.h"
+#include "soft_i2c.h"
 #include "user_main.h"
 #include "MMA8452Q.h"
 
@@ -15,42 +15,42 @@
 
 bool ICACHE_FLASH_ATTR MMA8452Q_setup(void)
 {
-    brzo_i2c_start_transaction(MMA8452Q_ADDRESS, MMA8452Q_FREQ);
+    soft_i2c_start_transaction(MMA8452Q_ADDRESS, MMA8452Q_FREQ);
 
     // Select mode register(0x2A)
     // Standby mode(0x00)
     uint8_t config[2] = {0};
     config[0] = 0x2A;
     config[1] = 0x00;
-    brzo_i2c_write(config, sizeof(config), false);
+    soft_i2c_write(config, sizeof(config), false);
 
     // Select mode register(0x2A)
     // Active mode(0x01)
     config[0] = 0x2A;
     config[1] = 0x01;
-    brzo_i2c_write(config, sizeof(config), false);
+    soft_i2c_write(config, sizeof(config), false);
 
     // Select configuration register(0x0E)
     // Set range to +/- 2g(0x00)
     config[0] = 0x0E;
     config[1] = 0x00;
-    brzo_i2c_write(config, sizeof(config), false);
+    soft_i2c_write(config, sizeof(config), false);
 
-    return (0 == brzo_i2c_end_transaction());
+    return (0 == soft_i2c_end_transaction());
 }
 
 void ICACHE_FLASH_ATTR MMA8452Q_poll(accel_t* currentAccel)
 {
     // Read 7 bytes of data(0x00)
-    brzo_i2c_start_transaction(MMA8452Q_ADDRESS, MMA8452Q_FREQ);
+    soft_i2c_start_transaction(MMA8452Q_ADDRESS, MMA8452Q_FREQ);
 
     uint8_t reg[1] = {0x00};
-    brzo_i2c_write(reg, sizeof(reg), false);
+    soft_i2c_write(reg, sizeof(reg), false);
 
     uint8_t data[7] = {0};
-    brzo_i2c_read(data, sizeof(data), false);
+    soft_i2c_read(data, sizeof(data), false);
 
-    uint8_t completion_code = brzo_i2c_end_transaction();
+    uint8_t completion_code = soft_i2c_end_transaction();
 
     if(completion_code != 0)
     {
