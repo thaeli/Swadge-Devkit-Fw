@@ -26,6 +26,7 @@
 #include "user_main.h"
 #include "espNowUtils.h"
 #include "brzo_i2c.h"
+#include "soft_i2c.h"
 #include "oled.h"
 #include "PartitionMap.h"
 #include "QMA6981.h"
@@ -225,6 +226,7 @@ void ICACHE_FLASH_ATTR user_init(void)
 
     // Initialize i2c
     brzo_i2c_setup(100);
+    soft_i2c_setup(100);
     os_printf("I2C initialized\n");
 
     // Initialize accel
